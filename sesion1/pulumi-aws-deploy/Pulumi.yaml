@@ -1,0 +1,10 @@
+name: pulumi-aws-deploy
+description: Ejemplo simple ede despliegue en AWS bajo Pulumi
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
