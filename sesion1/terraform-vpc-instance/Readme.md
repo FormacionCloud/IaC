@@ -8,7 +8,7 @@ Este proyecto contiene la definición de infraestructura para desplegar una **LA
 
 ## 🛠 Pasos desde Cloud9
 
-### 1. Instalar Terraform (si no está)
+### 1. Instalar Terraform
 
 Amazon Linux 2023 **no trae Terraform preinstalado**. Instálalo así:
 
