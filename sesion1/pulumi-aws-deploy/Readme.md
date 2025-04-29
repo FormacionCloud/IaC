@@ -1,4 +1,9 @@
-# Despliegue de ejemplo en AWS mediante Pulumi desde entorno Cloud9
+<picture>
+  <source srcset="https://www.pulumi.com/images/logo/logo-on-black.svg" media="(prefers-color-scheme: dark)">
+  <img src="https://www.pulumi.com/images/logo/logo-on-white.svg" alt="Pulumi Logo" width="200"/>
+</picture>
+
+# Despliegue en AWS mediante Pulumi desde entorno Cloud9
 
 Este proyecto crea infraestructura en AWS utilizando **Pulumi** con **TypeScript**, ejecutándose desde un entorno **AWS Cloud9**.  
 Incluye: VPC, subred pública, tabla de rutas, security group con reglas individuales (SSH y HTTP), e instancia EC2 con user-data para LAMP stack (Amazon Linux 2023).
