@@ -1,3 +1,5 @@
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" width=200/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Microsoft_Azure_Logo.svg" width=200/>
+
 # Despliegue en Azure con Terraform desde entorno Cloud9
 
 Este proyecto permite desplegar una infraestructura equivalente a una LAMP stack en **Microsoft Azure**, utilizando **Terraform** desde un entorno **AWS Cloud9**.
