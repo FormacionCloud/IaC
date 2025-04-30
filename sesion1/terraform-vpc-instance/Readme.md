@@ -1,4 +1,4 @@
-<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" width=200/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" width=200/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" width=100/>
 
 # Despliegue en AWS mediante Terraform desde entorno Cloud9
 
