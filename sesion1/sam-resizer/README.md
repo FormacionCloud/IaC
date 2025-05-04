@@ -15,7 +15,7 @@ cd ..
 sam deploy --guided
 ```
 
-Aceptar las opciones por defecto con la excepción del __nombre del bucket__: se debe elegir un nombre de bucket único a nivel mundial. Recomendación: elegir nombre + apellidos + número aleatorio (elegir únicamente letras minúsculas y números).
+Aceptar las opciones por defecto con la excepción del __nombre del bucket__: se debe elegir un nombre de bucket único a nivel mundial. Recomendación: elegir `nombre + apellidos + número aleatorio` (elegir únicamente letras minúsculas y números).
 
 ## Prueba de la aplicación
 Acceder a la consola, al servicio S3. Localizar el bucket creado. Crear una carpeta llamada `original` y subir un fichero de imagen en su interior. Por último, comprobar que se genera un fichero con el mismo nombre en la ruta `resized/` dentro del bucket.
