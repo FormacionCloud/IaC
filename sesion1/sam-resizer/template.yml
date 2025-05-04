@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless image resizing application
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: Name of the S3 bucket to store images
+  SourcePrefix:
+    Type: String
+    Description: Prefix for source images
+    Default: original/
+  ResizedPrefix:
+    Type: String
+    Description: Prefix for resized images
+    Default: resized/
+  ImageWidth:
+    Type: Number
+    Description: Width to resize images to
+    Default: 800
+
+Resources:
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: !Ref SourcePrefix
+            Function: !GetAtt ImageResizeFunction.Arn
+
+  ImageResizeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      CodeUri: ./src
+      Handler: app.handler
+      Runtime: nodejs22.x
+      Timeout: 30
+      MemorySize: 1024
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref BucketName
+          RESIZED_PREFIX: !Ref ResizedPrefix
+          IMAGE_WIDTH: !Ref ImageWidth
+
+  BucketPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ImageResizeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !Sub arn:aws:s3:::${BucketName}

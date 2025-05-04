@@ -1,0 +1,16 @@
+{
+  "name": "image-resizer",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.802.0",
+    "sharp": "^0.34.1"
+  }
+}
