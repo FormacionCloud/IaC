@@ -3,16 +3,19 @@ Transform: AWS::Serverless-2016-10-31
 Description: Serverless image resizing application
 
 Parameters:
+  SubscriptionEmail:
+    Type: String
+    Description: Email para recibir notificaciones
   BucketName:
     Type: String
-    Description: Name of the S3 bucket to store images
+    Description: Nombre del bucket para almacenar imágenes
   SourcePrefix:
     Type: String
-    Description: Prefix for source images
+    Description: Prefijo (carpeta) donde subir imágenes
     Default: original/
   ResizedPrefix:
     Type: String
-    Description: Prefix for resized images
+    Description: Prefijo (carpeta) donde almacenar imágenes redimensionadas
     Default: resized/
   ImageWidth:
     Type: Number
@@ -20,6 +23,13 @@ Parameters:
     Default: 800
 
 Resources:
+  MySNSTopic:
+    Type: AWS::SNS::Topic
+    TopicName: "ResizeTopic"
+    Subscription:
+      - Endpoint: !Ref SubscriptionEmail
+        Protocol: email
+
   ImageBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -33,6 +43,14 @@ Resources:
                   - Name: prefix
                     Value: !Ref SourcePrefix
             Function: !GetAtt ImageResizeFunction.Arn
+        TopicConfigurations:
+          - Event: s3:ObjectCreated:*
+            Topic: !GetAtt MySNSTopic.Arn
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: !Ref SourcePrefix
 
   ImageResizeFunction:
     Type: AWS::Serverless::Function
