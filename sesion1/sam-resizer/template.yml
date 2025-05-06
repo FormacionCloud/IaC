@@ -25,10 +25,11 @@ Parameters:
 Resources:
   MySNSTopic:
     Type: AWS::SNS::Topic
-    TopicName: "ResizeTopic"
-    Subscription:
-      - Endpoint: !Ref SubscriptionEmail
-        Protocol: email
+    Properties:
+      TopicName: "ResizeTopic"
+      Subscription:
+        - Endpoint: !Ref SubscriptionEmail
+          Protocol: email
 
   ImageBucket:
     Type: AWS::S3::Bucket
