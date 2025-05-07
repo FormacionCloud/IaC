@@ -30,6 +30,22 @@ Resources:
         - Endpoint: !Ref SubscriptionEmail
           Protocol: email
 
+  TopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Sid: AllowServices
+            Effect: Allow
+            Principal:
+              Service:
+                - s3.amazonaws.com
+            Action: 'sns:Publish'
+            Resource:
+              - !Ref MySNSTopic
+      Topics:
+        - !Ref MySNSTopic
+
   ImageBucket:
     Type: AWS::S3::Bucket
     Properties:
