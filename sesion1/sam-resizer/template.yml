@@ -46,7 +46,7 @@ Resources:
             Function: !GetAtt ImageResizeFunction.Arn
         TopicConfigurations:
           - Event: s3:ObjectCreated:*
-            Topic: !GetAtt MySNSTopic.Arn
+            Topic: !Ref MySNSTopic
             Filter:
               S3Key:
                 Rules:
