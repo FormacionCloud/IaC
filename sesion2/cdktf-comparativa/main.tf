@@ -1,5 +1,6 @@
 #############################
-#codigo clasico de terraform
+# codigo clasico de terraform
+# 4vpc 2 regiones
 #############################
 
 provider "aws" {
