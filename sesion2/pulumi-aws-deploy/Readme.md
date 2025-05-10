@@ -204,7 +204,7 @@ El código fuente (`index.ts`, `Pulumi.yaml`, etc.) **no se borra**.
 
 ---
 
-## 🔍 Referencias adicionales
+##  Referencias adicionales
 
 - [Documentación Pulumi AWS](https://www.pulumi.com/registry/packages/aws/)
 - [Documentación Pulumi CLI](https://www.pulumi.com/docs/reference/cli/)
