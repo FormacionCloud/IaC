@@ -6,7 +6,7 @@ Este proyecto permite desplegar una infraestructura equivalente a una LAMP stack
 
 ---
 
-## 🛠 Pasos desde Cloud9
+##  Pasos desde Cloud9
 
 ### 1. Instalar Azure CLI en Amazon Linux 2023
 
@@ -157,7 +157,7 @@ Terraform mostrará cambios como nuevas reglas en el NSG.
 terraform plan -refresh=false
 ```
 
-⚠️ Desde Terraform 1.6, `plan` y `apply` ya hacen `refresh` automático por defecto.
+ Desde Terraform 1.6, `plan` y `apply` ya hacen `refresh` automático por defecto.
 
 ---
 
@@ -187,7 +187,7 @@ terraform destroy
 
 ---
 
-## 📦 Estructura del proyecto modular incluido en el ZIP
+##  Estructura del proyecto modular incluido en el ZIP
 
 Se ha colgado también en un archivo zip un ejemplo de cómo se podría escribir este proyecto organizado en estructura moderna, en lugar de estar todo en un main.tf:
 
