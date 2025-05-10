@@ -4,7 +4,7 @@
 </picture>
 # Despliegue de infraestructura con AWS CDK en entorno Cloud9 (sin IAM ni bootstrap)
 
-## 📦 Recursos generados
+##  Recursos generados
 
 Este despliegue crea los siguientes recursos en AWS:
 
@@ -29,7 +29,7 @@ Este documento describe paso a paso cómo desplegar una infraestructura con AWS 
 
 ---
 
-## ✅ 1. Preparación del entorno Cloud9
+##  1. Preparación del entorno Cloud9
 
 ### 1.1 Actualizar e instalar herramientas necesarias
 
@@ -61,19 +61,19 @@ npm install aws-cdk-lib constructs
 
 ---
 
-## 🚫 2. Limitaciones en entornos como AWS Academy
+##  2. Limitaciones en entornos como AWS Academy
 
 Los entornos limitados no permiten operaciones sobre IAM. Esto impide:
 - Ejecutar `cdk bootstrap`
 - Usar recursos que necesiten "lookups" automáticos (por ejemplo: `Vpc.fromLookup`, `AvailabilityZone`, etc.)
 
-### ❌ ¿Qué es `cdk bootstrap`?
+###  ¿Qué es `cdk bootstrap`?
 CDK bootstrap crea una pila especial (`CDKToolkit`) con roles IAM, buckets y permisos usados para deploys modernos ("modern synthesis").
 
-### ❌ ¿Qué es un lookup?
+###  ¿Qué es un lookup?
 Es una operación donde CDK consulta en AWS información en tiempo de compilación (por ejemplo: AZs, VPCs existentes). Requiere IAM y acceso a SSM.
 
-### ✅ Soluciones aplicadas
+###  Soluciones aplicadas
 
 #### A) Evitamos el bootstrap:
 Editamos `cdk.json` para forzar modo "legacy" (que no necesita bootstrap):
@@ -92,7 +92,7 @@ Creamos los recursos manualmente usando `CfnXxx` en lugar de clases de alto nive
 
 ---
 
-## ⚡ 3. Configuración de credenciales AWS en Cloud9
+##  3. Configuración de credenciales AWS en Cloud9
 
 Cloud9 usa un perfil por defecto con credenciales que genera el propio servicio.
 Puedes verificar que está activo con:
@@ -105,7 +105,7 @@ No es necesario configurar `~/.aws/credentials` manualmente.
 
 ---
 
-## 📆 4. Despliegue de infraestructura
+##  4. Despliegue de infraestructura
 
 ### 4.1 Compilar el proyecto
 
@@ -153,7 +153,7 @@ cdk deploy
 
 ---
 
-## 🛡️ 5. Simulación de drift (desviación de configuración)
+##  5. Simulación de drift (desviación de configuración)
 
 ### 5.1 Simular un cambio manual
 
@@ -193,7 +193,7 @@ CDK volverá a dejar el estado real como el declarado en código.
 
 ---
 
-## ❌ 6. Eliminación de la infraestructura
+##  6. Eliminación de la infraestructura
 
 ```bash
 cdk destroy
@@ -203,7 +203,7 @@ Confirmar con `y` cuando lo solicite.
 
 ---
 
-## 📁 Estructura típica del proyecto
+##  Estructura típica del proyecto
 
 ```
 cdkproject/
@@ -217,5 +217,3 @@ cdkproject/
 ```
 
 ---
-
-Este README está pensado para entornos formativos como AWS Academy, donde no se permite IAM, y está probado paso a paso en CDK 2.x.
