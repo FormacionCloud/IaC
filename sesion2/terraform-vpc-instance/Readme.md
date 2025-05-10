@@ -28,7 +28,7 @@ terraform -v
 
 ### 2. Preparar entorno Cloud9
 
-Terraform en Cloud9 utiliza automáticamente las credenciales del entorno, gracias al rol IAM adjunto a la instancia.
+Terraform en Cloud9 utiliza automáticamente las credenciales propias que genera ese entorno (se puede ver en AWS Settings)
 
 Comprueba que puedes ejecutar comandos sin error:
 
@@ -37,6 +37,7 @@ aws sts get-caller-identity
 ```
 
 Esto debe devolver tu cuenta, usuario o rol actual.  
+
 No necesitas configurar manualmente `aws configure` ni exportar variables de entorno. 
 En otros entornos podría coger las credencias haciendo exports:
 
@@ -48,11 +49,10 @@ export AWS_SESSION_TOKEN="..."  # (solo si usas credenciales temporales)
 
 ---
 
-### 3. Clonar el repositorio y acceder
+### 3. Acceder a la carpeta de tu repositorio clonado
 
 ```bash
-git clone https://github.com/tuusuario/tu-repo.git
-cd tu-repo
+cd terraform-vpc-instance
 ```
 
 ---
