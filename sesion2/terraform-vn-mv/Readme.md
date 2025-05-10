@@ -70,11 +70,9 @@ export ARM_TENANT_ID=$(az account show --query tenantId -o tsv)
 
 ---
 
-### 4. Clonar el repositorio y entrar
-
+### 4. Entrar en el repositorio clonado, carpeta de terraform para Azure
 ```bash
-git clone https://github.com/tuusuario/tu-repo-azure.git
-cd tu-repo-azure
+cd terraform-vn-mv
 ```
 
 ---
