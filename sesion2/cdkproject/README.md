@@ -94,7 +94,7 @@ Creamos los recursos manualmente usando `CfnXxx` en lugar de clases de alto nive
 
 ## ⚡ 3. Configuración de credenciales AWS en Cloud9
 
-Cloud9 usa un perfil por defecto con rol IAM asociado a la instancia.
+Cloud9 usa un perfil por defecto con credenciales que genera el propio servicio.
 Puedes verificar que está activo con:
 
 ```bash
