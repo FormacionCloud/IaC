@@ -4,7 +4,7 @@ Este repositorio contiene una comparativa práctica entre Terraform clásico (HC
 
 ---
 
-## 🧱 Infraestructura objetivo (independientemente del enfoque)
+##  Infraestructura objetivo (independientemente del enfoque)
 
 Se desea desplegar las siguientes VPCs en AWS:
 
@@ -26,7 +26,7 @@ Para cada VPC se debe crear:
 
 ---
 
-## 🧾 `main.tf` — Terraform clásico (HCL plano)
+##  `main.tf` — Terraform clásico (HCL plano)
 
 Este archivo contiene una implementación completamente expandida y sin modularizar de los recursos necesarios para las 4 VPCs.
 
@@ -36,7 +36,7 @@ Este archivo contiene una implementación completamente expandida y sin modulari
 
 ---
 
-## 🧾 `main.ts` — CDKTF (CDK for Terraform)
+##  `main.ts` — CDKTF (CDK for Terraform)
 
 Este archivo contiene una implementación equivalente usando **TypeScript + CDKTF**.
 
@@ -49,7 +49,7 @@ Este enfoque demuestra la **ventaja real de CDKTF**: escribir infraestructura co
 
 ---
 
-## ✅ Conclusión
+##  Conclusión
 
 La infraestructura desplegada es exactamente la misma en ambos casos, pero:
 
