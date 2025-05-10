@@ -6,7 +6,7 @@ Este proyecto contiene la definición de infraestructura para desplegar una **LA
 
 ---
 
-## 🛠 Pasos desde Cloud9
+##  Pasos desde Cloud9
 
 ### 1. Instalar Terraform
 
@@ -122,7 +122,7 @@ terraform apply
 
 Esto restaurará el grupo de seguridad al estado definido en el código.
 
-➡️ Luego, vuelve a la **consola de AWS → EC2 → Grupos de seguridad** y verifica que la regla extra ya no está.
+ Luego, vuelve a la **consola de AWS → EC2 → Grupos de seguridad** y verifica que la regla extra ya no está.
 
 ---
 
