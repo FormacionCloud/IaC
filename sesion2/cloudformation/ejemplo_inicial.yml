@@ -32,12 +32,12 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref MiVPCVPC
-      AvailabilityZone: us-west-2a
+      AvailabilityZone: us-east-1a
       CidrBlock: 10.0.0.0/20
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: MiVPC-subnet-public1-us-west-2a
+          Value: MiVPC-subnet-public1-us-east-1a
 
   # Create an internet gateway
   MiVPCIGW:
