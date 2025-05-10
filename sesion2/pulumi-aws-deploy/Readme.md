@@ -20,13 +20,12 @@ Los siguientes archivos deben estar presentes en el repositorio:
 
 ---
 
-## ✅ Pasos detallados para desplegar en AWS Cloud9
+##  Pasos detallados para desplegar en AWS Cloud9
 
-### 1. Clonar el repositorio en tu entorno Cloud9
+### 1. Acceder a la carpeta del proyecto en el repositorio clonado
 
 ```bash
-git clone https://github.com/tuusuario/tu-repo.git
-cd tu-repo
+cd pulumi-aws-deploy
 ```
 
 ---
@@ -37,7 +36,7 @@ cd tu-repo
 curl -fsSL https://get.pulumi.com | sh
 ```
 
-> 🔁 Después de la instalación, añade Pulumi al `PATH`:
+>  Después de la instalación, añade Pulumi al `PATH`:
 ```bash
 echo 'export PATH=$PATH:/home/ec2-user/.pulumi/bin' >> ~/.bashrc
 source ~/.bashrc
@@ -121,7 +120,7 @@ deberías ver la página de `phpinfo()` generada automáticamente.
 
 ---
 
-## 🔄 Comprobación de Drift
+##  Comprobación de Drift
 
 ### 1. Simular un drift manual
 
@@ -168,7 +167,7 @@ Finalmente, puedes comprobar en la consola de AWS que la regla manual ha desapar
 
 ---
 
-## 💚 Destrucción de recursos
+##  Destrucción de recursos
 
 Para eliminar todos los recursos creados:
 
@@ -176,7 +175,7 @@ Para eliminar todos los recursos creados:
 pulumi destroy
 ```
 
-> ✅ Pulumi destruye los recursos en el orden correcto. Sin embargo, **mantiene** el historial y la configuración del stack (`Pulumi.dev.yaml`).
+>  Pulumi destruye los recursos en el orden correcto. Sin embargo, **mantiene** el historial y la configuración del stack (`Pulumi.dev.yaml`).
 
 
 ### Eliminar también el stack (opcional)
@@ -198,7 +197,7 @@ El código fuente (`index.ts`, `Pulumi.yaml`, etc.) **no se borra**.
 
 ---
 
-## 🔒 Seguridad
+##  Seguridad
 
 - Si trabajas con secretos (`pulumi config set --secret`), recuerda usar una contraseña segura al iniciar sesión local.
 - Guarda bien tu contraseña: si la pierdes, no podrás recuperar los valores cifrados.
