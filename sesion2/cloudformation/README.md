@@ -37,14 +37,20 @@ aws sts get-caller-identity
 2. Haz clic en **“Create stack” → “With new resources (standard)”**.
 3. Selecciona **“Upload a template file”**, elige el archivo `ejemplo_inicial.yml` y haz clic en **Next**.
 4. Asigna un nombre al stack (por ejemplo: `LAMPStack`).
-5. Acepta los valores por defecto y haz clic en **Next** → **Next** → **Create stack**.
+5. Acepta los valores por defecto, excepto para User Data, que tienes el valor del script en el fichero "userdata-base64.txt" y haz clic en **Next** → **Next** → **Create stack**.
+
+Nota: puedes "descubrir" el contenido del script de user-data usando algún servicio online de decodificación como https://www.base64decode.org/ 
 
 ### Opción 2: Desde la CLI
 
 En Cloud9, sitúate en la carpeta donde está la plantilla y ejecuta:
 
 ```bash
-aws cloudformation create-stack   --stack-name LAMPStack   --template-body file://ejemplo_inicial.yml 
+aws cloudformation create-stack \
+  --stack-name LAMPStack \
+  --template-body file://ejemplo_inicial.yml \
+  --parameters ParameterKey=UserData,ParameterValue="$(< userdata-base64.txt)"
+
 ```
 
 ## Seguimiento del despliegue
