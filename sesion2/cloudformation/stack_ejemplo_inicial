@@ -1,0 +1,149 @@
+#Cloudformation generado por AWS Console-to-Code con alguna ligera adaptacion posterior
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Creacion de una VPC con subred pública en el rango 10.0.0.0/16 y lanzamiento de una instancia t3.micro donde se instala una pila LAMP, con un grupo de seguridad que abre los puertos 80 y 22'
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t3.micro
+    Description: Instance type for the EC2 instance
+  ImageId:
+    Type: AWS::EC2::Image::Id
+    Default: ami-07b0c09aab6e66ee9
+    Description: AMI ID for the EC2 instance
+  UserData:
+    Type: String
+    Description: Script de arranque ya codificado en base64
+
+Resources:
+
+  # Create a VPC
+  MiVPCVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: MiVPC-vpc
+
+  # Create a public subnet
+  MiVPCSubnetPublic1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      AvailabilityZone: us-west-2a
+      CidrBlock: 10.0.0.0/20
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: MiVPC-subnet-public1-us-west-2a
+
+  # Create an internet gateway
+  MiVPCIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MiVPC-igw
+
+  # Attach the internet gateway to the VPC
+  MiVPCIGWAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      InternetGatewayId: !Ref MiVPCIGW
+
+  # Create a public route table
+  MiVPCRouteTablePublic:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      Tags:
+        - Key: Name
+          Value: MiVPC-rtb-public
+
+  # Create a route for internet access
+  MiVPCRoutePublicInternetAccess:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref MiVPCRouteTablePublic
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref MiVPCIGW
+
+  # Associate the public subnet with the public route table
+  MiVPCSubnetPublic1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MiVPCSubnetPublic1
+      RouteTableId: !Ref MiVPCRouteTablePublic
+
+  # Create a security group for the LAMP server
+  LAMPSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: LAMP-GS
+      GroupDescription: Grupo de seguridad servidor LAMP
+      VpcId: !Ref MiVPCVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  # Create an EC2 instance for the LAMP server
+  LAMPInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      UserData: !Ref UserData
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          GroupSet:
+            - !Ref LAMPSecurityGroup
+          SubnetId: !Ref MiVPCSubnetPublic1
+      CreditSpecification:
+        CPUCredits: unlimited
+      MetadataOptions:
+        HttpEndpoint: enabled
+        HttpPutResponseHopLimit: 2
+        HttpTokens: required
+      PrivateDnsNameOptions:
+        HostnameType: ip-name
+        EnableResourceNameDnsARecord: false
+        EnableResourceNameDnsAAAARecord: false
+      Tags:
+        - Key: Name
+          Value: ServidorLAMP
+
+Outputs:
+  VPCId:
+    Description: VPC ID
+    Value: !Ref MiVPCVPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPCID"
+
+  PublicSubnet1:
+    Description: Public Subnet 1 ID
+    Value: !Ref MiVPCSubnetPublic1
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet1"
+
+  LAMPInstanceId:
+    Description: LAMP Instance ID
+    Value: !Ref LAMPInstance
+    Export:
+      Name: !Sub "${AWS::StackName}-LAMPInstanceId"
+
+  LAMPSecurityGroupId:
+    Description: LAMP Security Group ID
+    Value: !Ref LAMPSecurityGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-LAMPSecurityGroupId"
