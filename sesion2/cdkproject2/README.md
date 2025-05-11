@@ -1,18 +1,20 @@
 ![CDK](https://i.imgur.com/B24wVrC.png)
 # Despliegue de infraestructura con AWS CDK en entorno Cloud9 (versión con Bootstrap)
 
+Esta plantilla despliega recursos de alto nivel con AWS CDK.
+
 ## Recursos generados
 
 Este despliegue crea los siguientes recursos en AWS:
 
 - **VPC personalizada** con CIDR `10.0.0.0/16`
-- **Subred pública** en `us-east-1a` con CIDR `10.0.0.0/24`
+- **2 subredes públicas**
 - **Internet Gateway** con ruta por defecto `0.0.0.0/0`
 - **Route Table** asociada a la subred
 - **Security Group** que permite:
   - Entrada en puerto **22 (SSH)** desde `0.0.0.0/0`
   - Entrada en puerto **80 (HTTP)** desde `0.0.0.0/0`
-- **Instancia EC2 t2.micro** con:
+- **Instancia EC2 t3.micro** con:
   - AMI de **Amazon Linux 2023**
   - IP pública
   - **User Data** que instala una pila LAMP
