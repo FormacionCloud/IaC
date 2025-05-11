@@ -120,7 +120,7 @@ const defaultStackSynthesizer = new DefaultStackSynthesizer({
 ```
 
 Por último, es necesario añadir dicho objeto a la creación de la app. Por ejemplo:
-```bash
+```ts
 const app = new cdk.App();
 new Cdk3Stack(app, 'Cdk3Stack', {
   // Añadir objecto creado como parámetro del stack
