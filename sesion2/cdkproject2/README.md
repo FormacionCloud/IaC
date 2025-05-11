@@ -27,7 +27,7 @@ Este documento describe paso a paso cómo desplegar una infraestructura con AWS 
 
 ---
 
-## ✅ 1. Clonado e instalación de dependencias
+## 1. Clonado e instalación de dependencias
 En primer lugar es necesario clonar el repositorio en el entorno de Cloud9.
 
 ### 1.1 Actualizar AWS CDK (opcional)
@@ -56,7 +56,7 @@ npm install
 
 ---
 
-## 🚫 2. Limitaciones en entornos como AWS Academy
+## 2. Limitaciones en entornos como AWS Academy
 AWS Academy no permite la creación de roles. Por tanto, no es posible realizar el _bootstraping_ del proyecto con los valores por defecto (https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html).
 
 Sin embargo, es posible configurar el bootstraping de manera personalizada para utilizar el rol `LabRole` proporcionado en el laboratorio de AWS Academy. Para ello seguiremos las instrucciones indicadas en este repositorio: https://github.com/wongcyrus/aws-cdk-hack-for-aws-academy-learner-lab
@@ -131,7 +131,7 @@ new Cdk3Stack(app, 'Cdk3Stack', {
 
 El código de la aplicación de este repositorio ya incluye dichos cambios, por lo que no es necesario añadirlos.
 
-## ⚡ 3. Configuración de credenciales AWS en Cloud9
+##  3. Configuración de credenciales AWS en Cloud9
 Cloud9 ya incluye unas credenciales que proporcionan acceso a los recursos de la cuenta AWS, por lo que no es necesario configurar `~/.aws/credentials` manualmente.
 
 ---
@@ -166,7 +166,7 @@ cdk deploy
 
 ---
 
-## 🛡️ 5. Simulación de drift (desviación de configuración)
+##  5. Simulación de drift (desviación de configuración)
 
 ### 5.1 Simular un cambio manual
 
@@ -208,7 +208,7 @@ CDK volverá a dejar el estado real como el declarado en código.
 
 ---
 
-## ❌ 6. Eliminación de la infraestructura
+##  6. Eliminación de la infraestructura
 
 ```bash
 cdk destroy
@@ -218,7 +218,7 @@ Confirmar con `y` cuando lo solicite.
 
 ---
 
-## 📁 Estructura típica del proyecto
+## Estructura típica del proyecto
 
 ```
 cdkproject2/
