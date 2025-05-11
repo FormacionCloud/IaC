@@ -1,8 +1,4 @@
-<picture>
-  <source srcset="https://www.pulumi.com/images/logo/logo-on-black.svg" media="(prefers-color-scheme: dark)">
-  <img src="https://www.pulumi.com/images/logo/logo-on-white.svg" alt="Pulumi Logo" width="200"/>
-</picture>
-
+![Pulumi](https://www.pulumi.com/images/logo/logo-on-white.svg)
 # Despliegue en AWS mediante Pulumi desde entorno Cloud9
 
 Este proyecto crea infraestructura en AWS utilizando **Pulumi** con **TypeScript**, ejecutándose desde un entorno **AWS Cloud9**.  

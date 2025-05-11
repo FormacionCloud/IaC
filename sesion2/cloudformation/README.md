@@ -1,8 +1,4 @@
-<picture>
-  <source srcset="https://cloud-icons.onemodel.app/aws/Architecture-Service-Icons_01312023/Arch_Management-Governance/64/Arch_AWS-CloudFormation_64.svg" media="(prefers-color-scheme: dark)">
-  <img src="https://cloud-icons.onemodel.app/aws/Architecture-Service-Icons_01312023/Arch_Management-Governance/64/Arch_AWS-CloudFormation_64.svg" alt="Cloudformation Logo" width="100"/>
-</picture>
-
+![CloudFormation](https://cloud-icons.onemodel.app/aws/Architecture-Service-Icons_01312023/Arch_Management-Governance/64/Arch_AWS-CloudFormation_64.svg)
 # Stack de infraestructura LAMP con CloudFormation
 
 Este repositorio contiene una plantilla YAML de CloudFormation diseñada para desplegar una infraestructura básica en AWS. La plantilla fue generada con **AWS Console-to-Code** y ligeramente corregida para adaptarse a una implementación sencilla y funcional.
@@ -104,7 +100,7 @@ aws cloudformation describe-stack-drift-detection-status   --stack-drift-detecti
 
 ## Limitación importante
 
-A diferencia de herramientas como **Terraform** o **AWS CDK**, **CloudFormation no reconcilia automáticamente el estado del recurso con la plantilla**. Si se detecta drift:
+A diferencia de herramientas como **Terraform**, **CloudFormation no reconcilia automáticamente el estado del recurso con la plantilla**. Si se detecta drift:
 
 - CloudFormation lo indica en su detección.
 - Pero **no revierte los cambios manuales** a menos que se haga una actualización o recreación explícita, eliminando y volviendo a crear.
