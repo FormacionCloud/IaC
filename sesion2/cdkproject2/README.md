@@ -136,7 +136,7 @@ Cloud9 ya incluye unas credenciales que proporcionan acceso a los recursos de la
 
 ---
 
-## 📆 4. Despliegue de infraestructura
+##  4. Despliegue de infraestructura
 
 ### 4.1 Compilar el proyecto
 
