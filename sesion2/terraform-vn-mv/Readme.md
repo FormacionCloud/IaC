@@ -187,9 +187,9 @@ terraform destroy
 
 ---
 
-##  Estructura del proyecto modular incluido en el ZIP
+##  Estructura del proyecto modular incluido en carpeta "ejemplo-modular"
 
-Se ha colgado también en un archivo zip un ejemplo de cómo se podría escribir este proyecto organizado en estructura moderna, en lugar de estar todo en un main.tf:
+Se ha colgado también en una carpeta un ejemplo de cómo se podría escribir este proyecto organizado en estructura moderna, en lugar de estar todo en un main.tf:
 
 - **main.tf**: Entrypoint (estructurado para futuras mejoras).
 - **versions.tf**: Restricción de versiones de Terraform y providers.
