@@ -14,7 +14,7 @@ Las carpetas que encontrarás contienen la siguiente información:
 - Carpeta `utils` - Contiene ficheros auxiliares para publicar las presentaciones mediante GitHub Actions. No es de interés para este curso (de nuevo, a no ser que te guste el tema :wink:).
 
 # Prácticas
-Las prácticas y sus enunciados correspondientes están disponibles en las carpetas que comienzan por el nombre `sesion`.
+A continuación tienes los enlaces para acceder a las prácticas publicadas hasta ahora:
 - [Sesión 2 - Práctica](./sesion2/)
 - [Sesiones 3 y 4 - Terraform: prácticas](./sesiones_3_4_terraform/)
 
