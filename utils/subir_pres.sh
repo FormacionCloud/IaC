@@ -16,7 +16,7 @@ do
 
   mkdir ../out
   cp -R "$entry" ../out/
-  cp ../htmltemplate/index.html "../out/$nombre/"
+  cp ./index.html "../out/$nombre/"
   sed -i "s|<title>.*</title>|<title>${titulo}</title>|" "../out/$nombre/index.html"
 done
 
