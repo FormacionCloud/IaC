@@ -3,7 +3,7 @@
 
 ## En este espacio os ofrecemos los recursos que hemos elaborado para Terraform:
 
-### <a href="https://formacioncloud.github.io/borradores_trabajo/03_inicial_gil" target="_blank">Presentación con los conocimientos básicos sobre Terraform</a> y que abarca:
+### [Presentación con los conocimientos básicos sobre Terraform](https://formacioncloud.github.io/borradores_trabajo/03_inicial_gil) y que abarca:
   ⚪ Instalación y configuración básica de Terraform
   ⚪ Estructura básica de un proyecto<br>
   ⚪ Lenguaje HCL<br>
