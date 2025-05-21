@@ -33,6 +33,10 @@
   
   A lo largo del proceso, **reforzaremos conceptos claves de Terraform** (proveedores, recursos, variables, estado, etc.) y de AWS (VPC, subredes, grupos de seguridad, roles IAM, autoescalado, balanceador de carga, EC2, RDS, user-data, etc.), y tareas extra para resolver.
 
+### Añadido [Apartados extra Terraform en AWS](./practica-terraform-aws/apartados_extra_aws.md)
+
+Proponemos una serie de **ampliaciones y mejoras en la práctica**, de las que no proporcionamos resolución directa pero sí indicaciones y que parten de la infraestructura completa, a implementar lógicamente en el código de Terraform y ser aplicadas posteriormente.
+
 ### Práctica **Terraform en Azure – Infraestructura para aplicación web**
   Misma infraestructura traducida a Azure, la cual analizaremos en relación a la anterior.
   
