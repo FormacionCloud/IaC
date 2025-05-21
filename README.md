@@ -4,7 +4,7 @@
 Repositorio de materiales del curso de formación __IaaC en la nube. Terraform y AWS CloudFormation__.
 
 ## Estructura y contenidos del repositorio
-Este repositorio estará en continua evolución, por lo que periódicamente realizaremos cambios en el mismo. Una vez clonado en tu equipo, puedes actualizar el contenido más reciente ejecutando el comando `git pull`.
+Este repositorio estará en continua evolución, por lo que periódicamente realizaremos cambios en el mismo. Una vez clonado en tu equipo, puedes __actualizar__ el contenido más reciente ejecutando el comando `git pull`.
 
 Las carpetas que encontrarás contienen la siguiente información:
 - Carpeta `.github/workflows` - Contiene una acción de integración continua en GitHub Actions para publicar las presentaciones y que estén accesibles a través del navegador. No es de interés para este curso (a no ser que te guste el tema :wink:).
@@ -15,8 +15,8 @@ Las carpetas que encontrarás contienen la siguiente información:
 
 # Prácticas
 Las prácticas y sus enunciados correspondientes están disponibles en las carpetas que comienzan por el nombre `sesion`.
-- [Sesión 2 - Práctica] - (./sesion2/)
-- [Sesiones 3 y 4 - Terraform: prácticas] - (./sesiones_3_4_terraform/)
+- [Sesión 2 - Práctica](./sesion2/)
+- [Sesiones 3 y 4 - Terraform: prácticas](./sesiones_3_4_terraform/)
 
 # Presentaciones
 - [Terraform](https://formacioncloud.github.io/IaC/03_terraform)
