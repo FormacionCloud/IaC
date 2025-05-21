@@ -1,4 +1,5 @@
-![Terraform](https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg)
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" height="100">
+
 # Terraform
 
 ## En este espacio os ofrecemos los recursos que hemos elaborado para Terraform:
