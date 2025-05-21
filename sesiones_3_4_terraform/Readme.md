@@ -17,7 +17,7 @@
   ⚪ Aspectos avanzados (I): Modules, Expressions, Functions<br>
   ⚪ Aspectos avanzados (II): Provisioners<br>
 
-### Práctica **[Terraform en AWS – Infraestructura para aplicación web](./practica-terraform-aws/Readme.md)**
+### Práctica **[Terraform en AWS – Infraestructura para aplicación web](./practica-terraform-aws)**
   En esta práctica construiremos desde cero una infraestructura en AWS usando Terraform. 
   
   **Desplegaremos una aplicación web (WordPress) de alta disponibilidad**: 
