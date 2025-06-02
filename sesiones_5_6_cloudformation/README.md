@@ -663,10 +663,25 @@ El procedimiento a seguir es el siguiente:
     ```
 
 > [!NOTE]
+> 
 > Aspectos a tener en cuenta:
 > 
 > -   Se asume el despliegue desde Cloud9 o una instancia EC2 configurada con el rol `LabRole`. En caso de utilizar un ordenador personal, será necesario instalar las credenciales en el archivo `~/.aws/credentials`.
 > -   Opción `--capabilities CAPABILITY_NAMED_IAM` para indicar que CloudFormation va a utilizar recursos de IAM existentes, en concreto el `LabRole` de AWS Academy (en caso contrario sería necesario incorporar `CAPABILITY_IAM`, si se necesitara crear recursos de IAM). Más información en <https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html>
+
+Al final, si se accede al servicio ECS se podrá observar el servicio desplegado:
+
+![img](./imagenes/ecsdesplegado1.png)
+
+Dentro del servicio, veremos las dos tareas desplegadas, con sus contenedores:
+
+![img](./imagenes/ecsdesplegado2.png)
+
+Por último, si accedemos a la URL que genera el stack como salida (sección *Outputs*), veremos que podemos acceder a la aplicación:
+
+![img](./imagenes/ecsdesplegado3.png)
+
+![img](./imagenes/ecsdesplegado4.png)
 
 
 
@@ -758,7 +773,7 @@ El procedimiento a seguir es el siguiente:
                 awslogs-stream-prefix: !Ref ServiceName
     
     ```
-    
+
 > [!WARNING]
 > 
 > Si vas a desplegar este nuevo servicio, hazlo mediante un despliegue independiente, introduciendo los parámetros al crear el stack. Si lo haces mediante plantilla anidada del stack completo es posible que te encuentres con algunos problemas de actualización. Si es el caso, elimina el servicio existente y entonces trata de desplegarlo todo de nuevo.
