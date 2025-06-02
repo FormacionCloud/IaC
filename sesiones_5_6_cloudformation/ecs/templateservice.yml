@@ -1,0 +1,191 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Ejemplo de servicio que se despliega en un cluster ECS con un
+  proveedor de capacidad de EC2.
+  El proveedor de capacidad creará las instancias necesarias para ejecutar los contenedores
+  definidos en las tareas que lanza el servicio.
+  El servicio se lanza en máquinas en subredes públicas, pero es accesible a través
+  de un balanceador de carga desplegado en subredes públicas
+Parameters:
+  VpcId:
+    Type: String
+    Description: VPC donde se lanzará el servicio
+  PublicSubnetIds:
+    Type: 'List<AWS::EC2::Subnet::Id>'
+    Description: Lista de IDs de subredes públicas para el balanceador
+  PrivateSubnetIds:
+    Type: 'List<AWS::EC2::Subnet::Id>'
+    Description: Lista de IDs de subredes privadas para las tareas de contenedores
+  ClusterName:
+    Type: String
+    Description: Nombre del cluster
+  CapacityProvider:
+    Type: String
+    Description: >-
+      Proveedor de capacidad del Cluster. Este servicio lanzará tareas en EC2
+      a través de dicho proveedor de capacidad
+  ServiceName:
+    Type: String
+    Default: web
+    Description: Nombre del servicio
+  ImageUrl:
+    Type: String
+    Default: 'public.ecr.aws/docker/library/nginx:latest'
+    Description: >-
+      URL de la imagen de Docker con la aplicación
+  ContainerCpu:
+    Type: Number
+    Default: 256
+    Description: CPU asignada al contenedor. 1024 es 1 CPU
+  ContainerMemory:
+    Type: Number
+    Default: 512
+    Description: Memoria RAM asignada al contenedor (MB)
+  ContainerPort:
+    Type: Number
+    Default: 80
+    Description: Puerto de escucha de la aplicación
+  DesiredCount:
+    Type: Number
+    Default: 2
+    Description: Número de tareas que desplegará el servicio (relacionado con el número de contenedores)
+Resources:
+
+  # Definición de tarea
+  TaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:
+      Family: !Ref ServiceName
+      Cpu: !Ref ContainerCpu
+      Memory: !Ref ContainerMemory
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - EC2
+      # LabRole de academy
+      ExecutionRoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      ContainerDefinitions:
+        - Name: !Ref ServiceName
+          Cpu: !Ref ContainerCpu
+          Memory: !Ref ContainerMemory
+          Image: !Ref ImageUrl
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+              HostPort: !Ref ContainerPort
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              mode: non-blocking
+              max-buffer-size: 25m
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: !Ref ServiceName
+
+  # Servicio
+  Service:
+    Type: AWS::ECS::Service
+    DependsOn: PublicLoadBalancerListener
+    Properties:
+      ServiceName: !Ref ServiceName
+      Cluster: !Ref ClusterName
+      PlacementStrategies:
+        - Field: 'attribute:ecs.availability-zone'
+          Type: spread
+        - Field: cpu
+          Type: binpack
+      CapacityProviderStrategy:
+        - Base: 0
+          CapacityProvider: !Ref CapacityProvider
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets: !Ref PrivateSubnetIds
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 75
+      DesiredCount: !Ref DesiredCount
+      TaskDefinition: !Ref TaskDefinition
+      LoadBalancers:
+        - ContainerName: !Ref ServiceName
+          ContainerPort: !Ref ContainerPort
+          TargetGroupArn: !Ref ServiceTargetGroup
+
+  # Grupo de seguridad del servicio
+  ServiceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Grupo de seguridad del servicio
+      VpcId: !Ref VpcId
+
+  # Grupo de destino del balanceador
+  ServiceTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      HealthCheckIntervalSeconds: 6
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      TargetType: ip
+      Port: !Ref ContainerPort
+      Protocol: HTTP
+      UnhealthyThresholdCount: 10
+      VpcId: !Ref VpcId
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: 0
+
+  # Grupo de seguridad del balanceador
+  PublicLoadBalancerSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Acceso publico al puerto 80 del balanceador
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: -1
+
+  # Balanceador
+  PublicLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '30'
+      Subnets: !Ref PublicSubnetIds
+      SecurityGroups:
+        - !Ref PublicLoadBalancerSG
+
+  # Listener balanceador
+  PublicLoadBalancerListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - Type: forward
+          ForwardConfig:
+            TargetGroups:
+              - TargetGroupArn: !Ref ServiceTargetGroup
+                Weight: 100
+      LoadBalancerArn: !Ref PublicLoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  # Regla de ingreso del grupo de seguridad del servicio
+  # Solo admite tráfico proveniente del grupo de seguridad del balanceador
+  ServiceIngressfromLoadBalancer:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      Description: Acceso desde el ELB
+      GroupId: !Ref ServiceSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref PublicLoadBalancerSG
+  LogGroup:
+    Type: 'AWS::Logs::LogGroup'   
+      
+
+Outputs:
+  ELBUrl:
+    Description: DNS del balanceador de carga. Punto de entrada de la aplicación
+    Value: !GetAtt PublicLoadBalancer.DNSName

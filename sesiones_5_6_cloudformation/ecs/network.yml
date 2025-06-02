@@ -1,0 +1,193 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Creacion de una VPC con subred pública en el rango 10.0.0.0/16'
+
+Resources:
+  # Create a VPC
+  MiVPCVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: MiVPC-vpc
+
+  # Create a public subnet
+  MiVPCSubnetPublic1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      AvailabilityZone: us-east-1a
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: MiVPC-subnet-public1-us-east-1a
+
+  # Create a public subnet
+  MiVPCSubnetPublic2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      AvailabilityZone: us-east-1b
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: MiVPC-subnet-public2-us-east-1b
+
+  # Create a private subnet
+  MiVPCSubnetPrivate1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      AvailabilityZone: us-east-1a
+      CidrBlock: 10.0.3.0/24
+      Tags:
+        - Key: Name
+          Value: MiVPC-subnet-private1-us-east-1a
+
+  # Create a private subnet
+  MiVPCSubnetPrivate2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      AvailabilityZone: us-east-1b
+      CidrBlock: 10.0.4.0/24
+      Tags:
+        - Key: Name
+          Value: MiVPC-subnet-private2-us-east-1b
+
+
+  # Create an internet gateway
+  MiVPCIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MiVPC-igw
+
+  # Attach the internet gateway to the VPC
+  MiVPCIGWAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      InternetGatewayId: !Ref MiVPCIGW
+
+  # Create a public route table
+  MiVPCRouteTablePublic:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      Tags:
+        - Key: Name
+          Value: MiVPC-rtb-public
+
+  # Create a route for internet access
+  MiVPCRoutePublicInternetAccess:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref MiVPCRouteTablePublic
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref MiVPCIGW
+
+  # Associate the public subnet 1 with the public route table
+  MiVPCSubnetPublic1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MiVPCSubnetPublic1
+      RouteTableId: !Ref MiVPCRouteTablePublic
+
+  # Associate the public subnet 2 with the public route table
+  MiVPCSubnetPublic2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MiVPCSubnetPublic2
+      RouteTableId: !Ref MiVPCRouteTablePublic
+
+  # Crear una NAT Gateway
+  MiVPCNATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt MiVPCNATGatewayEIP.AllocationId
+      SubnetId: !Ref MiVPCSubnetPublic1
+      Tags:
+        - Key: Name
+          Value: MiVPC-NAT-GW
+
+  # Elastic IP para la NAT Gateway
+  MiVPCNATGatewayEIP:
+   Type: AWS::EC2::EIP
+   Properties:
+      Domain: vpc
+
+  # Tabla enrutamiento subred privada
+  MiVPCRouteTablePrivate:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MiVPCVPC
+      Tags:
+        - Key: Name
+          Value: MiVPC-rtb-private
+
+  # Ruta para NAT gateway en subred privada
+  MiVPCRoutePrivate:
+   Type: AWS::EC2::Route
+   Properties:
+      RouteTableId: !Ref MiVPCRouteTablePrivate
+      DestinationCidrBlock: '0.0.0.0/0'
+      NatGatewayId: !Ref MiVPCNATGateway
+
+  # Associate the private subnet 1 with the private route table
+  MiVPCSubnetPrivate1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MiVPCSubnetPrivate1
+      RouteTableId: !Ref MiVPCRouteTablePrivate
+     
+  # Associate the private subnet 2 with the private route table
+  MiVPCSubnetPrivate2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MiVPCSubnetPrivate2
+      RouteTableId: !Ref MiVPCRouteTablePrivate
+
+  # Grupo de seguridad para las tareas de contenedores
+  # Apertura del puerto 80
+  ECSTasksSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: ECSTasks-GS
+      GroupDescription: Grupo de seguridad ECS tasks
+      VpcId: !Ref MiVPCVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  VPCId:
+    Description: VPC ID
+    Value: !Ref MiVPCVPC
+
+  PublicSubnet1:
+    Description: Public Subnet 1 ID
+    Value: !Ref MiVPCSubnetPublic1
+
+  PublicSubnet2:
+    Description: Public Subnet 2 ID
+    Value: !Ref MiVPCSubnetPublic2
+
+  PrivateSubnet1:
+    Description: Private Subnet 1 ID
+    Value: !Ref MiVPCSubnetPrivate1
+
+  PrivateSubnet2:
+    Description: Private Subnet 2 ID
+    Value: !Ref MiVPCSubnetPrivate2
+
+  ECSTasksSecurityGroupId:
+    Description: ECS Tasks SG
+    Value: !Ref ECSTasksSecurityGroup

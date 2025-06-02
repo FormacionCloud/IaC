@@ -17,6 +17,7 @@ Las carpetas que encontrarás contienen la siguiente información:
 A continuación tienes los enlaces para acceder a las prácticas publicadas hasta ahora:
 - [Sesión 2 - Práctica](./sesion2/)
 - [Sesiones 3 y 4 - Terraform: prácticas](./sesiones_3_4_terraform/)
+- [Sesiones 5 y 6 - Cloudformation: prácticas](./sesiones_5_6_cloudformation/)
 
 # Presentaciones
 - [Terraform](https://formacioncloud.github.io/IaC/03_terraform)

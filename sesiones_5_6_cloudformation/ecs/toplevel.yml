@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Plantilla base que lanza un conjunto de stacks anidados
+
+Parameters:
+  WebServiceName:
+    Type: String
+    Description: Nombre del servicio
+    Default: MyECSService
+Resources:
+
+  # Stack para crear las redes
+  MyNetworkStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./network.yml
+
+  # Stack para crear el cluster y el proveedor de capacidad
+  MyClusterStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./templateecs.yml
+      Parameters:
+        # InstanceType: t3.small
+        # DesiredCapacity: 0
+        # MaxSize: 5
+        # ECSAMI: /aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id
+        VpcId: !GetAtt MyNetworkStack.Outputs.VPCId
+        SubnetIds: !Sub "${MyNetworkStack.Outputs.PrivateSubnet1},${MyNetworkStack.Outputs.PrivateSubnet2}"
+          # - !GetAtt MyNetworkStack.Outputs.PrivateSubnet2
+        #bla: !GetAtt MyNetworkStack.Outputs.ECSTasksSecurityGroupId
+    DependsOn: MyNetworkStack
+
+  # Stack para crear el servicio que ejecutará las tareas de contenedores
+  MyServiceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./templateservice.yml
+      Parameters:
+        # InstanceType: t3.small
+        # DesiredCapacity: 0
+        # MaxSize: 5
+        # ECSAMI: /aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id
+        VpcId: !GetAtt MyNetworkStack.Outputs.VPCId
+        PublicSubnetIds: !Sub "${MyNetworkStack.Outputs.PublicSubnet1},${MyNetworkStack.Outputs.PublicSubnet2}"
+        PrivateSubnetIds: !Sub "${MyNetworkStack.Outputs.PrivateSubnet1},${MyNetworkStack.Outputs.PrivateSubnet2}"
+        ClusterName: !GetAtt MyClusterStack.Outputs.ClusterName
+        CapacityProvider: !GetAtt MyClusterStack.Outputs.CapacityProvider
+        ServiceName: !Ref WebServiceName
+        # ImageUrl: 'public.ecr.aws/docker/library/nginx:latest'
+        # ContainerCpu: 256
+        # ContainerMemory: 256
+        # ContainerPort: 80
+        # DesiredCount: 2
+    DependsOn: MyClusterStack
+Outputs:
+  ELBUrl:
+    Description: DNS del balanceador de carga
+    Value: !GetAtt MyServiceStack.Outputs.ELBUrl
