@@ -21,4 +21,5 @@ A continuación tienes los enlaces para acceder a las prácticas publicadas hast
 
 # Presentaciones
 - [Terraform](https://formacioncloud.github.io/IaC/03_terraform)
+- [CloudFormation: IaC nativo en AWS](https://formacioncloud.github.io/IaC/04_cloudformation)
 
