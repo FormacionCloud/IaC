@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Aplicación de ejemplo basada en el BluePrint de AWS SAM, Serverless API
+Transform:
+- AWS::Serverless-2016-10-31
+
+Resources:
+  getAllItemsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # Rol de laboratorio de AWS Academy
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      Handler: src/handlers/get-all-items.getAllItemsHandler
+      Runtime: nodejs18.x
+      Architectures:
+      - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP get method to get all items from
+        a DynamoDB table.
+      Environment:
+        Variables:
+          # Variable de entorno para identificar la tabla de la BD
+          SAMPLE_TABLE: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+  getByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # Rol de laboratorio de AWS Academy
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      Handler: src/handlers/get-by-id.getByIdHandler
+      Runtime: nodejs18.x
+      Architectures:
+      - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP get method to get one item by
+        id from a DynamoDB table.
+      Environment:
+        Variables:
+          # Variable de entorno para identificar la tabla de la BD
+          SAMPLE_TABLE: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{id}
+            Method: GET
+  putItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # Rol de laboratorio de AWS Academy
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      Handler: src/handlers/put-item.putItemHandler
+      Runtime: nodejs18.x
+      Architectures:
+      - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP post method to add one item to
+        a DynamoDB table.
+      Environment:
+        Variables:
+          # Variable de entorno para identificar la tabla de la BD
+          SAMPLE_TABLE: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+  SampleTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,PUT, OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"

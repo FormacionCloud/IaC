@@ -1,0 +1,184 @@
+name: Pipeline
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+
+env:
+  # Plantilla de Infraestructura como Código (IaC). Define los recursos a crear
+  SAM_TEMPLATE: template.yaml
+  # Nombre del conjunto de recursos desplegados para testeo
+  TESTING_STACK_NAME: todo-app-dev
+  # Región donde desplegar la infraestructura de testeo
+  TESTING_REGION: us-east-1
+  # Nombre del conjunto de recursos desplegados para producción
+  PROD_STACK_NAME: todo-app-prod
+  # Región donde desplegar la infraestructura de producción
+  PROD_REGION: us-east-1
+
+permissions:
+  id-token: write
+  contents: read
+
+# Tareas del pipeline
+jobs:
+  # Tarea 1: tests unitarios
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+      - name: Instalar dependencias
+        run: npm install
+      - name: Lanzar tests unitarios
+        run: npm run test
+
+  # Tarea 2: Compilación y empaquetado de la aplicación
+  build-and-package:
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+      - name: Eliminar carpeta de tests para reducir tamaño
+        run: rm -rf ./__tests__
+      - name: Instalar dependencias de producción únicamente
+        run: npm prune --production
+      - name: Instalar SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: Compilar aplicación
+        run: sam build --template ${SAM_TEMPLATE} --use-container
+
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.TESTING_REGION }}
+
+      - name: Empaquetar aplicación para testeo y compilar plantilla
+        run: |
+          sam package \
+            --region ${TESTING_REGION} \
+            --output-template-file packaged-testing.yaml
+
+      - name: Almacenar plantilla de testeo compilada para el siguiente paso
+        uses: actions/upload-artifact@v4
+        with:
+          name: packaged-testing.yaml
+          path: packaged-testing.yaml
+
+      - name: Empaquetar aplicación para producción y compilar plantilla
+        run: |
+          sam package \
+            --region ${PROD_REGION} \
+            --output-template-file packaged-prod.yaml
+
+      - name: Almacenar plantilla de producción compilada para el siguiente paso
+        uses: actions/upload-artifact@v4
+        with:
+          name: packaged-prod.yaml
+          path: packaged-prod.yaml
+
+  # Tarea 3: Despliegue de aplicación en infraestructura de test
+  deploy-testing:
+    needs: [build-and-package]
+    runs-on: ubuntu-latest
+    outputs:
+      ApiUrl: ${{ steps.GetUrl.outputs.ApiUrl }}
+    steps:
+      - name: Instalar SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+      - name: Obtener plantilla de test almacenada en el paso anterior
+        uses: actions/download-artifact@v4
+        with:
+          name: packaged-testing.yaml
+
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.TESTING_REGION }}
+
+      - name: Despliegue de aplicación en infraestructura de test
+        run: |
+          sam deploy --stack-name ${TESTING_STACK_NAME} \
+            --template packaged-testing.yaml \
+            --capabilities CAPABILITY_IAM \
+            --region ${TESTING_REGION} \
+            --no-fail-on-empty-changeset \
+      - name: Obtener URL de la API desplegada para almacenarla en el paso posterior
+        id: GetUrl
+        run: |
+          {
+            echo 'ApiUrl<<EOF'
+            sam list stack-outputs \
+              --stack-name ${TESTING_STACK_NAME} \
+              --region ${TESTING_REGION} \
+              --output json |  jq -r ".[0].OutputValue"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+  # Tarea 4: Test de integración en infraestructura de test
+  integration-test:
+    needs: [deploy-testing]
+    runs-on: ubuntu-latest
+    env:
+      ApiUrl: ${{needs.deploy-testing.outputs.ApiUrl}}
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+      - name: Instalar dependencias
+        run: npm install
+      - name: Ejecutar test de integración
+        run: |
+          ApiUrl=$ApiUrl npm run integracion
+
+  # Tarea 5: Despliegue de aplicación en infraestructura de producción
+  deploy-prod:
+    needs: [integration-test]
+    runs-on: ubuntu-latest
+    # Configurar un GitHub Action Environment para activar una aprobación manual
+    # https://docs.github.com/en/actions/reference/environments
+    environment: testenv
+    steps:
+      - name: Instalar SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+      - name: Obtener plantilla de producción almacenada en el paso anterior
+        uses: actions/download-artifact@v4
+        with:
+          name: packaged-prod.yaml
+
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.PROD_REGION }}
+
+      - name: Despliegue de aplicación en infraestructura de producción
+        run: |
+          sam deploy --stack-name ${PROD_STACK_NAME} \
+            --template packaged-prod.yaml \
+            --capabilities CAPABILITY_IAM \
+            --region ${PROD_REGION} \
+            --no-fail-on-empty-changeset \
+
+      - name: Borrar infraestructura de test
+        run: |
+          sam delete --stack-name ${TESTING_STACK_NAME} \
+            --region ${TESTING_REGION} \
+            --no-prompts

@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Ejemplo de aplicacion web para desplegar una API REST con AWS SAM
+
+# Indicamos que vamos a utilizar una plantilla SAM
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Parameters:
+  # El parámetro Stage nos permitirá crear las etapas de staging y production
+  Stage:
+    Type: String
+    AllowedValues:
+      - staging
+      - production
+  # Nombre de la API en API Gateway
+  ApiName:
+    Type: String
+    Default: sam-cefire
+
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub "${ApiName}-${Stage}"
+      StageName: !Ref Stage
+      Variables:
+        LAMBDA_ALIAS: !Ref Stage
+
+  CanaryErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Alarma para detección de problemas en Canary
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 2
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 60
+      Statistic: Sum
+      Threshold: 0
+      Dimensions:
+        - Name: Resource
+          Value: !Sub "${lambdaFunction}:${Stage}"
+        - Name: FunctionName
+          Value: !Ref lambdaFunction
+        - Name: ExecutedVersion
+          Value: !GetAtt lambdaFunction.Version.Version
+
+  lambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      FunctionName: !Sub "${Stage}-cefire-sam-main"
+      AutoPublishAlias: !Ref Stage
+      Handler: handler.handler
+      CodeUri: ./src/apifunction/
+      Runtime: nodejs22.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 10
+      Environment:
+        Variables:
+          tableName: !Ref SampleTable
+          stage: !Ref Stage
+      DeploymentPreference:
+        # Opciones: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/automating-updates-to-serverless-apps.html
+        # Type: Canary10Percent10Minutes
+        Type: Linear10PercentEvery1Minute
+        Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+        Alarms:
+        # Lista de alarmas que se comprobarán durante la actualización a nueva versión
+          - !Ref CanaryErrorsAlarm
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /{proxy+}
+            Method: ANY
+
+  # Tabla DynamoDB
+  SampleTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: !Sub "${Stage}-cefire-sam-tabla"
+      PrimaryKey: 
+        Name: PK
+        Type: String
+
+# Ajustes globales
+Globals:
+  Function:
+    Tags:
+      project: cefire-sam
+      environment: !Ref Stage
+  Api:
+    # Para evitar crear las etapas por defecto de la API
+    OpenApiVersion: 3.0.1
+    Cors:
+      AllowMethods: "'GET,POST,PUT,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
+Outputs:
+  ApiEndpoint:
+    Description: "URL de la API"
+    Value: !Sub "https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}/"
+  DynamoDBTable:
+    Description: "Tabla DynamoDB"
+    Value: !Ref SampleTable

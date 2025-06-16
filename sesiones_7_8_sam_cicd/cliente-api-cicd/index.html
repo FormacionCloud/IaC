@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Test AWS SAM</title>
+  </head>
+
+  <body>
+    <h1>
+      Cliente para interactuar con la aplicación AWS SAM de tipo Serverless API
+    </h1>
+    <div id="app">
+      Introduce la URL de la API creada por la aplicación SAM:
+      <input type="text" id="apiURL" />
+    </div>
+
+    <div id="acciones">
+      <div id="leer">
+        <h2>Leer ítems</h2>
+        <button onclick="leerDatos()" type="text" id="leerDatos">
+          Leer datos de la API
+        </button>
+        <div id="datos"></div>
+        <hr />
+      </div>
+      <div id="crear">
+        <h2>Crear ítem</h2>
+        <form action="" onSubmit="crearItem(event)">
+          <label for="idItem">Id:</label> <input type="text" id="idItem" />
+          <label for="nameItem">Name:</label>
+          <input type="text" id="nameItem" />
+          <button type="submit">Crear nuevo ítem</button>
+        </form>
+        <hr />
+      </div>
+    </div>
+
+    <script>
+      var datos = [];
+      const datosDiv = document.getElementById("datos");
+
+      async function leerDatos() {
+        let URL = document.getElementById("apiURL").value;
+        if (!URL) {
+          alert(
+            "Debes introducir la URL de la API en el cuadro de texto correspondiente",
+          );
+          return;
+        }
+        let response = await fetch(URL, {
+          headers: { "Content-Type": "application/json" },
+        });
+        datos = await response.json();
+        console.log(datos);
+        repintar();
+      }
+
+      async function crearItem(event) {
+        event.preventDefault();
+        let URL = document.getElementById("apiURL").value;
+        if (!URL) {
+          alert(
+            "Debes introducir la URL de la API en el cuadro de texto correspondiente",
+          );
+          return;
+        }
+        let id = document.getElementById("idItem").value;
+        let name = document.getElementById("nameItem").value;
+        let datos = { id, name };
+        let response = await fetch(URL, {
+          method: "POST",
+          body: JSON.stringify(datos),
+          headers: { "Content-Type": "application/json" },
+        });
+        await leerDatos();
+        repintar();
+      }
+
+      function repintar() {
+        datosDiv.innerHTML = "";
+
+        for (let dato of datos) {
+          datosDiv.innerHTML += `<dl><dt>Id: </dt><dd>${dato.id}</dd><dt>Name: </dt><dd>${dato.name}</dd></dl><hr>`;
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "apifunction",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=local node app.local.mjs --trace-warnings",
+    "test": "NODE_ENV=local mocha --timeout 20000"
+  },
+  "dependencies": {
+    "@codegenie/serverless-express": "^4.16.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "mocha": "^11.6.0"
+  }
+}
