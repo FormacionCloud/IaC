@@ -24,4 +24,5 @@ A continuación tienes los enlaces para acceder a las prácticas publicadas hast
 - [Terraform](https://formacioncloud.github.io/IaC/03_terraform)
 - [CloudFormation: IaC nativo en AWS](https://formacioncloud.github.io/IaC/04_cloudformation)
 - [AWS Serverless Application Model (AWS SAM)](https://formacioncloud.github.io/IaC/05_sam)
+- [Framework CI/CD, estrategias de despliegue y herramientas](https://formacioncloud.github.io/IaC/06_cicd)
 
