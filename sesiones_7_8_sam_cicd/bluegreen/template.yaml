@@ -13,6 +13,7 @@ Parameters:
     AllowedValues:
       - staging
       - production
+    Default: staging
   # Nombre de la API en API Gateway
   ApiName:
     Type: String
