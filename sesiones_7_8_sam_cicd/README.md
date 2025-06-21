@@ -243,11 +243,11 @@ Como salida, se indica la URL de la API y el nombre de la tabla DynamoDB.
 9.  Acceder a CodeDeploy en la consola de AWS y comprobar el estado de migración del tráfico. Comprobar que los porcentajes se van actualizando cada 1 minuto.
 10. Acceder a la función Lambda en la consola de AWS. Consultar el alias y comprobar los porcentajes de tráfico asignados a las diferentes versiones. Comprobar que coinciden con los valores de CodeDeploy y que los porcentajes se van actualizando cada 1 minuto.
 11. Lanzar varias peticiones a la ruta raíz de la API. Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos el mensaje que se muestra es el nuevo, mientras que en la mayoría es el antiguo. Comprobar que cuando finaliza la transición, todas las peticiones devuelven el mensaje nuevo.
-12. Modificar de nuevo el código de la aplicación, fichero `index.mjs`, e introducir un cambio (se propone uno marcado como `TODO 2`).
+12. Modificar de nuevo el código de la aplicación, fichero `index.mjs`, y **eliminar el código** de la ruta `/adios`, para que se produzca un error de ejecución en la nueva versión a desplegar de la función Lambda (marcado como `TODO 2`).
 13. Desplegar de nuevo la aplicación
 14. Acceder a CodeDeploy en la consola de AWS y comprobar el estado de migración del tráfico. Comprobar que los porcentajes se van actualizando cada 1 minuto.
 15. Acceder a la función Lambda en la consola de AWS. Consultar el alias y comprobar los porcentajes de tráfico asignados a las diferentes versiones. Comprobar que coinciden con los valores de CodeDeploy y que los porcentajes se van actualizando cada 1 minuto.
-16. Lanzar varias peticiones a la nueva ruta de la API (`/adios2`). Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos se muestra el texto, mientras que en la mayoría de las ocasiones **se muestra un error**. Estos errores provocarán un **rollback**, interrumpiendo el despliegue y volviendo a la versión anterior.
+16. Lanzar varias peticiones a la ruta de la API (`/adios`). Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos se muestra el texto, mientras que en ocasiones **se muestra un error**. Estos errores provocarán un **rollback**, interrumpiendo el despliegue y volviendo a la versión anterior.
 17. Acceder a CloudWatch y comprobar que la alarma que hemos creado se ha activado
 18. Acceder a CodeDeploy y comprobar que el despliegue se ha abortado y se ha realizado un **rollback**
 
