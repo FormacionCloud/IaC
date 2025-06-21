@@ -247,7 +247,7 @@ Como salida, se indica la URL de la API y el nombre de la tabla DynamoDB.
 13. Desplegar de nuevo la aplicación
 14. Acceder a CodeDeploy en la consola de AWS y comprobar el estado de migración del tráfico. Comprobar que los porcentajes se van actualizando cada 1 minuto.
 15. Acceder a la función Lambda en la consola de AWS. Consultar el alias y comprobar los porcentajes de tráfico asignados a las diferentes versiones. Comprobar que coinciden con los valores de CodeDeploy y que los porcentajes se van actualizando cada 1 minuto.
-16. Lanzar varias peticiones a la ruta de la API (`/adios`). Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos se muestra el texto, mientras que en ocasiones **se muestra un error**. Estos errores provocarán un **rollback**, interrumpiendo el despliegue y volviendo a la versión anterior.
+16. Lanzar varias peticiones a la ruta de la API (`/adios`). Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos se muestra el texto (versión actual), mientras que en ocasiones **se muestra un error** (nueva versión con error incluido). Estos errores serán registrados por la alarma de CloudWatch, que monitoriza **los errores de la nueva versión desplegada**, y provocarán un **rollback**, interrumpiendo el despliegue y volviendo a la versión anterior.
 17. Acceder a CloudWatch y comprobar que la alarma que hemos creado se ha activado
 18. Acceder a CodeDeploy y comprobar que el despliegue se ha abortado y se ha realizado un **rollback**
 
