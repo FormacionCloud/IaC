@@ -208,22 +208,24 @@ Como salida, se indica la URL de la API y el nombre de la tabla DynamoDB.
 
 ### Tareas propuestas
 
-1.  Instalar las dependencias del proyecto:
+1.  Acceder a la carpeta `./bluegreen/src/apifunction`
+2.  Instalar las dependencias del proyecto:
     
     ```bash
     npm install
     ```
-2.  Ejecutar los tests unitarios:
+3.  Ejecutar los tests unitarios:
     
     ```bash
     npm run test
     ```
-3.  Testear la aplicación local, sin utilizar SAM ni AWS:
+4.  Testear la aplicación local, sin utilizar SAM ni AWS:
     
     ```bash
     npm run start
     ```
-4.  Desplegar el stack mediante el comando siguiente:
+5.  Volver a la carpeta `./bluegreen`
+6.  Desplegar el stack mediante el comando siguiente:
     
     ```bash
     sam deploy --guided
@@ -236,18 +238,18 @@ Como salida, se indica la URL de la API y el nombre de la tabla DynamoDB.
     /?nombre=VALOR
     /adios
     ```
-5.  Modificar el código de la aplicación, fichero `index.mjs`, e introducir un cambio (se propone uno marcado como `TODO 1`).
-6.  Desplegar de nuevo la aplicación
-7.  Acceder a CodeDeploy en la consola de AWS y comprobar el estado de migración del tráfico. Comprobar que los porcentajes se van actualizando cada 1 minuto.
-8.  Acceder a la función Lambda en la consola de AWS. Consultar el alias y comprobar los porcentajes de tráfico asignados a las diferentes versiones. Comprobar que coinciden con los valores de CodeDeploy y que los porcentajes se van actualizando cada 1 minuto.
-9.  Lanzar varias peticiones a la ruta raíz de la API. Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos el mensaje que se muestra es el nuevo, mientras que en la mayoría es el antiguo. Comprobar que cuando finaliza la transición, todas las peticiones devuelven el mensaje nuevo.
-10. Modificar de nuevo el código de la aplicación, fichero `index.mjs`, e introducir un cambio (se propone uno marcado como `TODO 2`).
-11. Desplegar de nuevo la aplicación
-12. Acceder a CodeDeploy en la consola de AWS y comprobar el estado de migración del tráfico. Comprobar que los porcentajes se van actualizando cada 1 minuto.
-13. Acceder a la función Lambda en la consola de AWS. Consultar el alias y comprobar los porcentajes de tráfico asignados a las diferentes versiones. Comprobar que coinciden con los valores de CodeDeploy y que los porcentajes se van actualizando cada 1 minuto.
-14. Lanzar varias peticiones a la nueva ruta de la API (`/adios2`). Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos se muestra el texto, mientras que en la mayoría de las ocasiones **se muestra un error**. Estos errores provocarán un **rollback**, interrumpiendo el despliegue y volviendo a la versión anterior.
-15. Acceder a CloudWatch y comprobar que la alarma que hemos creado se ha activado
-16. Acceder a CodeDeploy y comprobar que el despliegue se ha abortado y se ha realizado un **rollback**
+7.  Modificar el código de la aplicación, fichero `index.mjs`, e introducir un cambio (se propone uno marcado como `TODO 1`).
+8.  Desplegar de nuevo la aplicación
+9.  Acceder a CodeDeploy en la consola de AWS y comprobar el estado de migración del tráfico. Comprobar que los porcentajes se van actualizando cada 1 minuto.
+10. Acceder a la función Lambda en la consola de AWS. Consultar el alias y comprobar los porcentajes de tráfico asignados a las diferentes versiones. Comprobar que coinciden con los valores de CodeDeploy y que los porcentajes se van actualizando cada 1 minuto.
+11. Lanzar varias peticiones a la ruta raíz de la API. Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos el mensaje que se muestra es el nuevo, mientras que en la mayoría es el antiguo. Comprobar que cuando finaliza la transición, todas las peticiones devuelven el mensaje nuevo.
+12. Modificar de nuevo el código de la aplicación, fichero `index.mjs`, e introducir un cambio (se propone uno marcado como `TODO 2`).
+13. Desplegar de nuevo la aplicación
+14. Acceder a CodeDeploy en la consola de AWS y comprobar el estado de migración del tráfico. Comprobar que los porcentajes se van actualizando cada 1 minuto.
+15. Acceder a la función Lambda en la consola de AWS. Consultar el alias y comprobar los porcentajes de tráfico asignados a las diferentes versiones. Comprobar que coinciden con los valores de CodeDeploy y que los porcentajes se van actualizando cada 1 minuto.
+16. Lanzar varias peticiones a la nueva ruta de la API (`/adios2`). Puedes hacerlo a través del navegador, pulsando `F5` varias veces repetidamente. Comprobar que en alguno de los casos se muestra el texto, mientras que en la mayoría de las ocasiones **se muestra un error**. Estos errores provocarán un **rollback**, interrumpiendo el despliegue y volviendo a la versión anterior.
+17. Acceder a CloudWatch y comprobar que la alarma que hemos creado se ha activado
+18. Acceder a CodeDeploy y comprobar que el despliegue se ha abortado y se ha realizado un **rollback**
 
 Realiza una breve memoria donde incluyas capturas de cada uno de los pasos realizados.
 
