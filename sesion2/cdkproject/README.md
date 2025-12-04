@@ -182,7 +182,7 @@ aws cloudformation describe-stack-drift-detection-status --stack-drift-detection
 Existe un comando adicional `npx cdk diff`, que se encarga de comprobar las __diferencias entre la plantilla local y la desplegada en CloudFormation__. Es importante dejar claro que esas diferencias __no incluyen los cambios realizados de manera externa a la plantilla__, como el que nos aplica. A todos los efectos, CDK es igual a CloudFormation en este aspecto.
 
 ## Limitación importante
-De la misma manera que en CloudFormation, **CloudFormation no reconcilia automáticamente el estado del recurso con la plantilla**. Si se detecta drift habrá que actuar del mismo modo que con CloudFormation:
+De la misma manera que en CloudFormation, **CDK no reconcilia automáticamente el estado del recurso con la plantilla**. Si se detecta drift habrá que actuar del mismo modo que con CloudFormation:
 
 - CloudFormation lo indica en su detección.
 - Pero **no revierte los cambios manuales** a menos que se haga una actualización o recreación explícita, eliminando y volviendo a crear.
