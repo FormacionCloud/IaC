@@ -1,0 +1,149 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: VS Code Server on EC2 with self-signed HTTPS (no CloudFront)
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t3.small
+
+  KeyPair:
+    Type: String
+    Default: ""
+    Description: EC2 Key Pair name (optional)
+
+  AMI:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+
+  VPC:
+    Type: AWS::EC2::VPC::Id
+
+  Subnet:
+    Type: AWS::EC2::Subnet::Id
+
+Conditions:
+  HasKeyPair: !Not [!Equals [!Ref KeyPair, ""]]
+
+Resources:
+  CodeServerPassword:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      GenerateSecretString:
+        ExcludePunctuation: true
+        PasswordLength: 20
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: code-server access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - !If
+          - HasKeyPair
+          - IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            CidrIp: 0.0.0.0/0
+          - !Ref AWS::NoValue
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref AMI
+      KeyName: !If [HasKeyPair, !Ref KeyPair, !Ref AWS::NoValue]
+      SubnetId: !Ref Subnet
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      IamInstanceProfile: LabInstanceProfile
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash
+            export HOME=/root
+
+            dnf update -y
+            dnf install -y dnf-plugins-core
+            dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+            dnf -y install git nodejs python docker terraform
+            systemctl enable --now docker
+            usermod -aG docker ec2-user
+
+            curl -fsSL https://code-server.dev/install.sh | sh
+
+            PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${CodeServerPassword} --query SecretString --output text --region ${AWS::Region})
+
+            mkdir -p /home/ec2-user/.config/code-server
+            cat << EOF > /home/ec2-user/.config/code-server/config.yaml
+            bind-addr: 0.0.0.0:443
+            auth: password
+            password: $PASSWORD
+            cert: true
+            EOF
+
+            chown -R ec2-user:ec2-user /home/ec2-user/.config
+
+            # Allow non-root to bind port 443
+            setcap cap_net_bind_service=+ep /usr/lib/code-server/lib/node
+
+            cat << EOF > /etc/systemd/system/code-server@.service
+            [Unit]
+            Description=code-server
+            After=network.target
+
+            [Service]
+            Type=exec
+            ExecStart=/usr/bin/code-server
+            Restart=always
+            User=%i
+
+            [Install]
+            WantedBy=default.target
+            EOF
+
+            systemctl daemon-reload
+            systemctl enable --now code-server@ec2-user
+
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Instance
+
+  SecretFetcherFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+      Code:
+        ZipFile: |
+          import boto3, json
+          from urllib.request import urlopen, Request
+          def send(event, status, data={}):
+            body = json.dumps({'Status': status, 'Reason': '', 'PhysicalResourceId': 'secret', 'StackId': event['StackId'], 'RequestId': event['RequestId'], 'LogicalResourceId': event['LogicalResourceId'], 'Data': data}).encode()
+            urlopen(Request(event['ResponseURL'], data=body, headers={'Content-Type': ''}, method='PUT'))
+          def handler(event, context):
+            try:
+              if event['RequestType'] == 'Delete':
+                return send(event, 'SUCCESS')
+              secret = boto3.client('secretsmanager').get_secret_value(SecretId=event['ResourceProperties']['SecretId'])['SecretString']
+              send(event, 'SUCCESS', {'SecretValue': secret})
+            except Exception as e:
+              send(event, 'FAILED', {'Error': str(e)})
+
+  CodeServerPasswordValue:
+    Type: Custom::SecretFetcher
+    Properties:
+      ServiceToken: !GetAtt SecretFetcherFunction.Arn
+      SecretId: !Ref CodeServerPassword
+
+Outputs:
+  VSCodeURL:
+    Value: !Sub "https://${ElasticIP}"
+
+  VSCodePassword:
+    Value: !GetAtt CodeServerPasswordValue.SecretValue
