@@ -42,17 +42,13 @@ source ~/.bashrc
 
 ### 3. Iniciar sesión local (sin usar Pulumi Cloud)
 
-Pulumi, por defecto, intenta conectarse a Pulumi Cloud para guardar los estados de despliegue. Si prefieres trabajar **completamente local**:
+Pulumi, por defecto, intenta conectarse a Pulumi Cloud para guardar los estados de despliegue. Mejor vamos a trabajar **completamente local**:
 
 ```bash
 pulumi login --local
 ```
-o bien
-```bash
-pulumi login --local --plaintext
-```
 
-La diferencia es que con la primera, Pulumi te pedirá una contraseña opcional para cifrar los secretos guardados (como contraseñas o claves API) y cona la segunda estará todo en texto plano.
+Nos pedirá una contraseña para guardar los secretos y lanzar las operaciones, pon alguna sencilla.
 
 ---
 
