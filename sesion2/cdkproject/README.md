@@ -1,5 +1,5 @@
 ![CDK](https://i.imgur.com/B24wVrC.png)
-# Despliegue de infraestructura con AWS CDK en entorno Cloud9 (sin IAM ni bootstrap)
+# Despliegue de infraestructura con AWS CDK en entorno IDE Cloud (sin IAM ni bootstrap)
 
 ##  Recursos generados
 
@@ -20,13 +20,13 @@ Este despliegue crea los siguientes recursos en AWS:
 
 ---
 
-# Despliegue de infraestructura con AWS CDK en entorno Cloud9 (sin IAM ni bootstrap)
+# Despliegue de infraestructura con AWS CDK en entorno IDE Cloud (sin IAM ni bootstrap)
 
-Este documento describe paso a paso cómo desplegar una infraestructura con AWS CDK desde un entorno Cloud9 con permisos limitados, como los entornos de AWS Academy o similares. 
+Este documento describe paso a paso cómo desplegar una infraestructura con AWS CDK desde un entorno IDE Cloud con permisos limitados, como los entornos de AWS Academy o similares. 
 
 ---
 
-##  1. Preparación del entorno Cloud9
+##  1. Preparación del entorno IDE Cloud
 
 ### 1.1 Actualizar e instalar herramientas necesarias
 
@@ -37,7 +37,7 @@ sudo yum install -y git
 
 ### 1.2 Instalar AWS CDK
 
-Es necesario usar `--force` porque Cloud9 ya tiene instaladas versiones previas de CDK:
+Es necesario usar `--force` porque IDE Cloud ya tiene instaladas versiones previas de CDK:
 
 ```bash
 sudo npm install -g aws-cdk --force
@@ -89,9 +89,9 @@ Creamos los recursos manualmente usando `CfnXxx` en lugar de clases de alto nive
 
 ---
 
-##  3. Configuración de credenciales AWS en Cloud9
+##  3. Configuración de credenciales AWS en IDE Cloud
 
-Cloud9 usa un perfil por defecto con credenciales que genera el propio servicio.
+IDE Cloud usa un perfil por defecto con credenciales que genera el propio servicio.
 Puedes verificar que está activo con:
 
 ```bash
