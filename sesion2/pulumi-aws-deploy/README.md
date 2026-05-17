@@ -48,7 +48,11 @@ Pulumi, por defecto, intenta conectarse a Pulumi Cloud para guardar los estados 
 pulumi login --local
 ```
 
-Nos pedirá una contraseña para guardar los secretos y lanzar las operaciones, pon alguna sencilla.
+Nos pedirá una contraseña para guardar los secretos y lanzar las operaciones, pon alguna sencilla y si quieres puedes decirle que la recuerde para no ponerla todo el rato:
+
+```bash
+export PULUMI_CONFIG_PASSPHRASE="mipassword"
+```
 
 ---
 
