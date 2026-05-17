@@ -1,7 +1,7 @@
 ![Pulumi](https://www.pulumi.com/images/logo/logo-on-white.svg)
-# Despliegue en AWS mediante Pulumi desde entorno Cloud9
+# Despliegue en AWS mediante Pulumi desde entorno IDE Cloud
 
-Este proyecto crea infraestructura en AWS utilizando **Pulumi** con **TypeScript**, ejecutándose desde un entorno **AWS Cloud9**.  
+Este proyecto crea infraestructura en AWS utilizando **Pulumi** con **TypeScript**, ejecutándose desde un entorno **AWS IDE Cloud**.  
 Incluye: VPC, subred pública, tabla de rutas, security group con reglas individuales (SSH y HTTP), e instancia EC2 con user-data para LAMP stack (Amazon Linux 2023).
 
 ##  Archivos del proyecto
@@ -16,7 +16,7 @@ Los siguientes archivos deben estar presentes en el repositorio:
 
 ---
 
-##  Pasos detallados para desplegar en AWS Cloud9
+##  Pasos detallados para desplegar en AWS IDE Cloud
 
 ### 1. Acceder a la carpeta del proyecto en el repositorio clonado
 
