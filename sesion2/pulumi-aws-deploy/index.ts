@@ -41,14 +41,30 @@ const routeTableAssociation = new aws.ec2.RouteTableAssociation("MyRouteTableAss
 const sg = new aws.ec2.SecurityGroup("MySecurityGroup", {
     vpcId: vpc.id,
     description: "Allow SSH and HTTP",
-    ingress: [
-        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: ["0.0.0.0/0"] },
-        { protocol: "tcp", fromPort: 80, toPort: 80, cidrBlocks: ["0.0.0.0/0"] },
-    ],
     egress: [
         { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] },
     ],
     tags: { Name: "MySecurityGroup" }
+});
+
+new aws.ec2.SecurityGroupRule("sg-ssh", {
+    type: "ingress",
+    securityGroupId: sg.id,
+    protocol: "tcp",
+    fromPort: 22,
+    toPort: 22,
+    cidrBlocks: ["0.0.0.0/0"],
+    description: "SSH",
+});
+
+new aws.ec2.SecurityGroupRule("sg-http", {
+    type: "ingress",
+    securityGroupId: sg.id,
+    protocol: "tcp",
+    fromPort: 80,
+    toPort: 80,
+    cidrBlocks: ["0.0.0.0/0"],
+    description: "HTTP",
 });
 
 // 7. Crear la EC2 Instance
