@@ -1,12 +1,12 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" width=200/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" width=100/>
 
-# Despliegue en AWS mediante Terraform desde entorno Cloud9
+# Despliegue en AWS mediante Terraform desde entorno IDE Cloud
 
-Este proyecto contiene la definición de infraestructura para desplegar una **LAMP stack en AWS** usando **Terraform**, ejecutado desde un entorno **Cloud9 basado en Amazon Linux 2023**.
+Este proyecto contiene la definición de infraestructura para desplegar una **LAMP stack en AWS** usando **Terraform**, ejecutado desde un entorno **IDE Cloud**.
 
 ---
 
-##  Pasos desde Cloud9
+##  Pasos desde IDE Cloud
 
 ### 1. Instalar Terraform
 
@@ -26,9 +26,9 @@ terraform -v
 
 ---
 
-### 2. Preparar entorno Cloud9
+### 2. Preparar entorno IDE Cloud
 
-Terraform en Cloud9 utiliza automáticamente las credenciales propias que genera ese entorno (se puede ver en AWS Settings)
+Terraform en IDE Cloud utiliza automáticamente las credenciales propias que genera ese entorno (se puede ver en AWS Settings)
 
 Comprueba que puedes ejecutar comandos sin error:
 
