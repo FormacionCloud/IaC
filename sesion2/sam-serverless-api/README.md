@@ -45,10 +45,16 @@ const response = {
 ```
 
 ### Despliegue
-Una vez modificados todos los ficheros y guardados los cambios, hay que ejecutar:
+Una vez modificados todos los ficheros y guardados los cambios, desde la carpeta de la app creada por sam, hay que ejecutar:
 
 ```bash
-sam deploy
+sam deploy --guided
+```
+
+En el despliegue, deja por deffecto todas las opciones excepto la creación del rol que no estaría permitido en un Learner Lab:
+
+```bash
+ Allow SAM CLI IAM role creation [Y/n]: n
 ```
 
 Si se produce algún error, habrá que eliminar el stack mediante `sam delete`. A continuación se podrá realizar `sam deploy` otra vez.
