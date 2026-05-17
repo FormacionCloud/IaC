@@ -12,7 +12,7 @@ Este despliegue crea los siguientes recursos en AWS:
 - **Security Group** que permite:
   - Entrada en puerto **22 (SSH)** desde `0.0.0.0/0`
   - Entrada en puerto **80 (HTTP)** desde `0.0.0.0/0`
-- **Instancia EC2 t2.micro** con:
+- **Instancia EC2 t3.micro** con:
   - AMI de **Amazon Linux 2023**
   - IP pública
   - **User Data** que instala una pila LAMP
@@ -26,7 +26,7 @@ Este documento describe paso a paso cómo desplegar una infraestructura con AWS 
 
 ---
 
-##  1. Preparación del entorno IDE Cloud
+##  1. Preparación del entorno IDE Cloud (ve a la carpeta de cdkproject)
 
 ### 1.1 Actualizar e instalar herramientas necesarias
 
@@ -37,25 +37,17 @@ sudo yum install -y git
 
 ### 1.2 Instalar AWS CDK
 
-Es necesario usar `--force` porque IDE Cloud ya tiene instaladas versiones previas de CDK:
+Es necesario usar `--force` porque IDE Cloud podría tener instaladas versiones previas de CDK:
 
 ```bash
 sudo npm install -g aws-cdk --force
 ```
 
-### 1.3 Inicializar proyecto CDK
+### 1.3 Instalar el proyecto
 
 ```bash
-mkdir cdkproject && cd cdkproject
-cdk init app --language=typescript
+npm install
 ```
-
-### 1.4 Instalar dependencias de CDK
-
-```bash
-npm install aws-cdk-lib constructs
-```
-
 ---
 
 ##  2. Limitaciones en entornos como AWS Academy
@@ -73,7 +65,7 @@ Es una operación donde CDK consulta en AWS información en tiempo de compilaci�
 ###  Soluciones aplicadas
 
 #### A) Evitamos el bootstrap:
-Editamos `cdk.json` para forzar modo "legacy" (que no necesita bootstrap):
+Examina cómo hemos añadido una directiva a `cdk.json` para forzar modo "legacy" (que no necesita bootstrap):
 
 ```json
 {
@@ -110,26 +102,10 @@ No es necesario configurar `~/.aws/credentials` manualmente.
 npm run build
 ```
 
-### 4.2 Desplegar
-
-Antes de desplegar, asegúrate de que el archivo `cdk.json` ha sido modificado correctamente para evitar el uso de `cdk bootstrap`. Este cambio es esencial para que el despliegue funcione sin necesidad de permisos IAM.
-
-**Cambios necesarios en `cdk.json`:**
-
-```json
-{
-  "app": "npx ts-node --prefer-ts-exts bin/cdkproject.ts",
-  "context": {
-    "@aws-cdk/core:newStyleStackSynthesis": false
-  }
-}
-```
-
-Este cambio fuerza a CDK a usar el modo clásico de síntesis, lo cual elimina la dependencia de recursos creados por `cdk bootstrap` (como roles IAM o parámetros en SSM).
-
-Una vez realizado este cambio, puedes desplegar con:
+### 4.2 Desplegar (el synth es opcional, es para ver qué va a crear)
 
 ```bash
+cdk synth
 cdk deploy
 ```
 
