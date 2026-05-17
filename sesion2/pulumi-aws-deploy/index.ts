@@ -45,6 +45,8 @@ const sg = new aws.ec2.SecurityGroup("MySecurityGroup", {
         { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] },
     ],
     tags: { Name: "MySecurityGroup" }
+}, {
+    ignoreChanges: ["ingress"],
 });
 
 new aws.ec2.SecurityGroupRule("sg-ssh", {
