@@ -7,8 +7,7 @@ Parameters:
     Default: t3.small
 
   KeyPair:
-    Type: String
-    Default: ""
+    Type: AWS::EC2::KeyPair::KeyName
     Description: EC2 Key Pair name (optional)
 
   AMI:
@@ -60,19 +59,29 @@ Resources:
       SecurityGroupIds:
         - !Ref InstanceSecurityGroup
       IamInstanceProfile: LabInstanceProfile
+      BlockDeviceMappings:
+      - DeviceName: "/dev/xvda"
+        Ebs:
+          VolumeType: "gp3"
+          DeleteOnTermination: "true"
+          VolumeSize: "30"
       UserData:
         Fn::Base64:
           !Sub |
             #!/bin/bash
             export HOME=/root
 
+            # Paquetes
             dnf update -y
             dnf install -y dnf-plugins-core
             dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
             dnf -y install git nodejs python docker terraform
+
+            # Docker service
             systemctl enable --now docker
             usermod -aG docker ec2-user
 
+            # Visual Studio Code Server
             curl -fsSL https://code-server.dev/install.sh | sh
 
             PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${CodeServerPassword} --query SecretString --output text --region ${AWS::Region})
@@ -107,6 +116,12 @@ Resources:
 
             systemctl daemon-reload
             systemctl enable --now code-server@ec2-user
+
+            #SAM
+            wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+            unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
+            ./sam-installation/install
+
 
   ElasticIP:
     Type: AWS::EC2::EIP
