@@ -12,9 +12,9 @@ Con esta plantilla se desplegará:
 - Una instancia EC2 `t3.micro` con un **stack LAMP** (Linux, Apache, MySQL, PHP).
 - Un **grupo de seguridad** que abre los puertos **80 (HTTP)** y **22 (SSH)**.
 
-## Entorno Cloud9
+## Entorno IDE Cloud
 
-Este ejercicio se ejecutará desde un entorno **Cloud9** provisto por **AWS Academy**, el cual ya incluye:
+Este ejercicio se ejecutará desde un entorno **IDE Cloud** que el docente os mostrará como desplegar, el cual ya incluye:
 
 - AWS CLI preinstalada.
 - Credenciales temporales precargadas.
@@ -39,7 +39,7 @@ Nota: puedes "descubrir" el contenido del script de user-data usando algún serv
 
 ### Opción 2: Desde la CLI
 
-En Cloud9, sitúate en la carpeta donde está la plantilla y ejecuta:
+En el IDE, sitúate en la carpeta donde está la plantilla y ejecuta:
 
 ```bash
 aws cloudformation create-stack \
