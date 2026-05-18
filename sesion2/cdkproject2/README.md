@@ -1,5 +1,5 @@
 ![CDK](https://i.imgur.com/B24wVrC.png)
-# Despliegue de infraestructura con AWS CDK en entorno Cloud9 (versión con Bootstrap)
+# Despliegue de infraestructura con AWS CDK en entorno IDE Cloud (versión con Bootstrap)
 
 Esta plantilla despliega recursos de alto nivel con AWS CDK.
 
