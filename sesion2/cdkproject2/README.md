@@ -22,18 +22,16 @@ Este despliegue crea los siguientes recursos en AWS:
 
 ---
 
-# Despliegue de infraestructura con AWS CDK en entorno Cloud9 (versión con Bootstrap)
-Este documento describe paso a paso cómo desplegar una infraestructura con AWS CDK desde un entorno Cloud9 en laboratorios de AWS Academy.
+# Despliegue de infraestructura con AWS CDK en entorno IDE Cloud (versión con Bootstrap)
+Este documento describe paso a paso cómo desplegar una infraestructura con AWS CDK desde un entorno IDE Cloud en laboratorios de AWS Academy.
 
 ---
 
 ## 1. Clonado e instalación de dependencias
-En primer lugar es necesario clonar el repositorio en el entorno de Cloud9.
+En primer lugar es necesario clonar el repositorio en el IDE Cloud.
 
 ### 1.1 Actualizar AWS CDK (opcional)
-Cloud9 incluye por defecto `git` y la herramienta `cdk`. No obstante, se incluyen las instrucciones para actualizar la herramienta `cdk` y para crear una aplicación nueva, paso no necesario si se realiza el clonado de este repositorio.
-
-Es necesario usar `--force` porque Cloud9 ya tiene instaladas versiones previas de CDK:
+El IDE cloud ya incluye `git`. A continuación se indica cómo instalar la herramienta `cdk`:
 
 ```bash
 sudo npm install -g aws-cdk --force
@@ -131,8 +129,8 @@ new Cdk3Stack(app, 'Cdk3Stack', {
 
 El código de la aplicación de este repositorio ya incluye dichos cambios, por lo que no es necesario añadirlos.
 
-##  3. Configuración de credenciales AWS en Cloud9
-Cloud9 ya incluye unas credenciales que proporcionan acceso a los recursos de la cuenta AWS, por lo que no es necesario configurar `~/.aws/credentials` manualmente.
+##  3. Configuración de credenciales AWS en el IDE Cloud
+El IDE Cloud se ejecuta en una instanacia EC2 que incluye los permisos necesarios, por lo que no es necesario configurar `~/.aws/credentials` manualmente.
 
 ---
 
