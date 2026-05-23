@@ -20,14 +20,14 @@
 ### Práctica **[Terraform en AWS – Infraestructura para aplicación web](./practica-terraform-aws)**
   En esta práctica construiremos desde cero una infraestructura en AWS usando Terraform. 
   
-  **Desplegaremos una aplicación web (WordPress) de alta disponibilidad**: 
-    -Infraestructura de red y Nat Gateway 
-    -Cortafuegos
-    -Servidores web EC2 en múltiples AZs
-    -Un balanceador de carga sobre Target Group
-    -Un Autoscaling group asociado 
-    -Base de datos gestionada (Amazon RDS) 
-    -Sistema de archivos compartido (Amazon EFS) que contendrá tanto código como assets. 
+  **Desplegaremos una aplicación web (WordPress) preparada para alta disponibilidad**:<br> 
+    -Infraestructura de red y Nat Gateway <br>
+    -Cortafuegos<br>
+    -Servidores web EC2 en múltiples AZs (inicialmente sólo uno) <br>
+    -Un balanceador de carga sobre Target Group<br>
+    -Un Autoscaling group asociado <br>
+    -Base de datos gestionada (Amazon RDS)<br> 
+    -Sistema de archivos compartido (Amazon EFS) que contendrá tanto código como assets. <br>
 
 ![Arquitectura final](./practica-terraform-aws/imagenes/infraestructura_final.jpg)
   
