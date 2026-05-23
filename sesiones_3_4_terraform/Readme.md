@@ -5,7 +5,7 @@
 ## En este espacio os ofrecemos los recursos que hemos elaborado para Terraform:
 
 ### [Presentación con los conocimientos básicos sobre Terraform](https://formacioncloud.github.io/IaC/03_terraform) y que abarca:
-  ⚪ Instalación y configuración básica de Terraform
+  ⚪ Instalación y configuración básica de Terraform<br>
   ⚪ Estructura básica de un proyecto<br>
   ⚪ Lenguaje HCL<br>
   ⚪ Terraform CLI<br>
